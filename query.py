@@ -22,10 +22,11 @@ def get_info_from_db(db:DbMaster, menu:str, params: Optional[Tuple] = None)-> Li
                     '''
             case "actor_list": # no params
                 query = '''
-                    SELECT  actor_id as Nr,
-                            CONCAT(last_name, ' ', first_name) as name 
+                    SELECT  actor_id as FID,
+                    last_name as LastName,
+                    first_name as FirstName
                     FROM actor 
-                    ORDER BY actor_id;
+                    ORDER BY last_name;
                     '''
             case "film_by_category_and_year":# params: (category,year)
                 query = '''

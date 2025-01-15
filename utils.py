@@ -44,11 +44,11 @@ def search_by_actor(db):
     try:
         act = get_info_from_db(db, "actor_list") # actors list from db
         res = display_table(act, 'Choice an Actor:') # output in Window
-        actor_id = res.get('Nr')
+        actor_id = res.get('FID')
         if actor_id:
             results = get_info_from_db(db, "film_by_actor", (actor_id,))
-            display_table(results, f"Films by Actor '{res.get('name')}' to EXIT: (<Double-Click> or <Enter>)")
-            db.insert_query_log('film_by_actor', f'{res.get('name')}') # write in popular_query
+            display_table(results, f"Films by Actor: {res.get('FirstName')} {res.get('LastName')}     |    >> EXIT: [Double-Click] or [Enter] ")
+            db.insert_query_log('film_by_actor', f'{res.get('FirstName')} {res.get('LastName')}') # write in popular_query
     except Exception as e:
         messagebox.showerror("Error!", f"Error occurred: {e}")
 
