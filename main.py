@@ -58,7 +58,7 @@ def create_buttons(frame: tk.Frame, database_connection: DbMaster, root: tk.Tk) 
     root.icons = {key: tk.PhotoImage(file=path) for key, path in ICON_PATHS.items()}
 
     # Configure grid layout in the parent frame
-    frame.grid_rowconfigure(0, weight=1)  # Row growable
+    frame.grid_rowconfigure(0, weight=1)  # Row growable - weight=1 makes the row and column "stretchy"
     frame.grid_columnconfigure(0, weight=1)  # Column growable
 
     buttons = [

@@ -1,5 +1,6 @@
 from dbmaster import DbMaster
 from typing import Tuple,Optional,Dict,List
+from error_handler import handle_non_blocking_error
 
 def get_info_from_db(db:DbMaster, menu:str, params: Optional[Tuple] = None)-> List[Dict]:
     if menu:
@@ -154,8 +155,8 @@ def get_info_from_db(db:DbMaster, menu:str, params: Optional[Tuple] = None)-> Li
             case _: # there is no such menu
                 return []
         try:
-            res = db.execute_query(query,params)
+            res = db.execute_query(query, params)
             return res
         except RuntimeError as e:
-            raise RuntimeError(f'Error while executing query: {e}')
-    return []
+            handle_non_blocking_error("Runtime Error", str(e))
+        return []
