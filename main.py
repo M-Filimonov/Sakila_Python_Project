@@ -95,7 +95,7 @@ def create_buttons(frame: tk.Frame, database_connection: DbMaster, root: tk.Tk) 
             compound='left', #alignment relative to icon
             anchor='w', # alignment left
             width=250, # button width
-            bg='#add8e6', # background color (LightBlue)
+            bg='#D3D3D3', # background color (LightGray)
             command=command # action on click
         ).grid(
             row=idx,

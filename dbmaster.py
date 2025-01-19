@@ -6,7 +6,7 @@ import error_handler
 class DbMaster:
     """
     A class to handle database operations with MySQL using mysql.connector.
-    This class includes robust error handling, validation, and proper resource management.
+    Includes robust error handling, validation, and proper resource management.
     """
 
     def __init__(self, host: str, user: str, password: str, database: str):
@@ -22,18 +22,17 @@ class DbMaster:
         Raises:
             RuntimeError: If the connection to the database fails.
         """
+        self.connection = None
+        self.cursor = None
         try:
             self.connection = mysql.connector.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=database
+                host=host, user=user, password=password, database=database, autocommit=False
             )
             if not self.connection.is_connected():
                 raise RuntimeError("Failed to establish a database connection.")
             self.cursor = self.connection.cursor(dictionary=True)
         except mysql.connector.Error as e:
-            if self.connection:
+            if self.connection and self.connection.is_connected():
                 self.connection.close()
             self.connection = None
             self.cursor = None
@@ -58,7 +57,7 @@ class DbMaster:
         if not self.connection or not self.connection.is_connected():
             raise RuntimeError("No database connection.")
         if params and not isinstance(params, tuple):
-            raise ValueError("Params must be a tuple")
+            raise ValueError("Params must be a tuple.")
         try:
             self.cursor.execute(query, params)
             return self.cursor.fetchall()
@@ -81,19 +80,66 @@ class DbMaster:
         """
         if not self.connection or not self.connection.is_connected():
             raise RuntimeError("No database connection.")
-        query = '''
-            INSERT INTO popular_query (type_query, text_query) 
-            VALUES (%s, %s) 
+
+        # Ensure the table exists
+        if not self.check_db_table("popular_query"):
+            create_table_query = '''
+                CREATE TABLE IF NOT EXISTS popular_query (
+                    log_id INT AUTO_INCREMENT PRIMARY KEY,
+                    type_query VARCHAR(50) NOT NULL,
+                    text_query VARCHAR(50) NOT NULL,
+                    count INT DEFAULT 1,
+                    query_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE INDEX unique_query (type_query, text_query)
+                );
+            '''
+            try:
+                self.cursor.execute(create_table_query)
+                self.connection.commit()
+            except mysql.connector.Error as e:
+                self.connection.rollback()
+                error_handler.handle_error_with_recommendation("Database Error", str(e))
+                raise RuntimeError(f"Error creating 'popular_query' table: {e}")
+
+        # Insert or update query log
+        insert_query = '''
+            INSERT INTO popular_query (type_query, text_query)
+            VALUES (%s, %s)
             ON DUPLICATE KEY UPDATE count = count + 1
         '''
         try:
-            with self.connection.cursor() as cursor:
-                cursor.execute(query, (type_query, text_query))
+            self.cursor.execute(insert_query, (type_query, text_query))
             self.connection.commit()
         except mysql.connector.Error as e:
             self.connection.rollback()
             error_handler.handle_error_with_recommendation("Database Error", str(e))
-            raise RuntimeError(f"Error inserting query log: {e}, transaction rolled back")
+            raise RuntimeError(f"Error inserting query log: {e}")
+
+    def check_db_table(self, table_name: str) -> bool:
+        """
+        Checks if a table with the given name exists in the current database.
+
+        Args:
+            table_name (str): The name of the table to check.
+
+        Returns:
+            bool: True if the table exists, False otherwise.
+
+        Raises:
+            RuntimeError: If no database connection is available or if an error occurs during the query.
+        """
+        query = '''
+            SELECT COUNT(*) AS table_exists
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE() AND table_name = %s;
+        '''
+        try:
+            self.cursor.execute(query, (table_name,))
+            result = self.cursor.fetchone()
+            return bool(result and result.get("table_exists", 0))  # Safely handle result and key lookup
+        except mysql.connector.Error as e:
+            error_handler.handle_error_with_recommendation("Database Error", str(e))
+            raise RuntimeError(f"Error checking table existence: {e}")
 
     def close(self) -> None:
         """
@@ -101,7 +147,13 @@ class DbMaster:
 
         Ensures all active resources are properly released to avoid resource leaks.
         """
-        if self.cursor:
-            self.cursor.close()
-        if self.connection and self.connection.is_connected():
-            self.connection.close()
+        try:
+            if self.cursor:
+                self.cursor.close()
+        except Exception as e:
+            error_handler.handle_error_with_recommendation("Cursor Close Error", str(e))
+        try:
+            if self.connection and self.connection.is_connected():
+                self.connection.close()
+        except Exception as e:
+            error_handler.handle_error_with_recommendation("Connection Close Error", str(e))
