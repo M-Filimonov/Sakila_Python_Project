@@ -67,7 +67,7 @@ def get_info_from_db(db: DbMaster, menu: str, params: Optional[Tuple] = None) ->
         error_handler.handle_non_blocking_error("Invalid Input", "Menu cannot be empty or None.")
         return []
 
-    query = None
+    #query = None
 
     # Using match-case to handle different queries
     match menu:

@@ -15,8 +15,8 @@ DB_SETTINGS: Dict[str, Optional[str]] = {
 }
 
 # Constants
-MAIN_WINDOW_WIDTH: int = 420
-MAIN_WINDOW_HEIGHT: int = 300
+MWINDOW_WIDTH: int = 420
+MWINDOW_HEIGHT: int = 300
 ICON_PATHS: Dict[str, str] = {
     "keyword": 'icons/menu_keyword.png',
     "category": 'icons/menu_category.png',
@@ -52,9 +52,9 @@ def setup_main_window() -> tk.Tk:
     root.resizable(False, False)
     screen_width: int = root.winfo_screenwidth()
     screen_height: int = root.winfo_screenheight()
-    position_x: int = (screen_width // 2) - (MAIN_WINDOW_WIDTH // 2)
-    position_y: int = (screen_height // 2) - (MAIN_WINDOW_HEIGHT // 2)
-    root.geometry(f'{MAIN_WINDOW_WIDTH}x{MAIN_WINDOW_HEIGHT}+{position_x}+{position_y}')
+    position_x: int = (screen_width // 2) - (MWINDOW_WIDTH // 2)
+    position_y: int = (screen_height // 2) - (MWINDOW_HEIGHT // 2)
+    root.geometry(f'{MWINDOW_WIDTH}x{MWINDOW_HEIGHT}+{position_x}+{position_y}')
 
     # Ensure the window is active and gets the focus
     root.lift()  # Bring the window to the front

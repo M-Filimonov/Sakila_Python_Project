@@ -67,23 +67,16 @@ class DbMaster:
 
     def insert_query_log(self, type_query: str, text_query: str) -> None:
         """
-        Inserts or updates a log entry in the "popular_query" database table
+        Inserts or updates a database entry for tracking frequently executed queries.
 
-        Based on the provided type  of query and text query.
-        If there is no entry matching the provided type and text query, a new
-        record is created. If an entry already exists, the `count` field is incremented by 1.
-        Ensures the table exists before attempting the operation.
-        Commits changes to the database or rolls back in case of an error.
+        Increments the count for a query if it already exists (using ON DUPLICATE KEY UPDATE).
 
         Args:
-            type_query:(str) a string representing the specific type of query to be logged.
-            text_query: a string representing the textual content of the query to be logged.
-        Returns:
-            This function does not return any value. It modifies the database state directly.
+            type_query (str): The type of the query (e.g., 'SELECT', 'INSERT').
+            text_query (str): The text of the query.
+
         Raises:
-            RuntimeError: If there is no active database connection, if creation of the
-            "popular_query" table fails, or if an issue occurs during the insertion or
-            update of the query log.
+            RuntimeError: If no database connection is available or if an error occurs during insertion.
         """
         if not self.connection or not self.connection.is_connected():
             raise RuntimeError("No database connection.")
