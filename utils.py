@@ -21,8 +21,7 @@ def search_by_keyword(db: DbMaster, root: tk.Tk) -> None:
     :type db: DbMaster
     :param root: The root Tkinter window object used for displaying the dialog and results.
     :type root: tk.Tk
-    :return: This function does not return any value; it performs operations via side-effects such as GUI updates
-        and database interactions.
+    :return: This function does not return any value
     :rtype: None
 
     """
