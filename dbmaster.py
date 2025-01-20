@@ -76,8 +76,8 @@ class DbMaster:
         Commits changes to the database or rolls back in case of an error.
 
         Args:
-            type_query:(str) a string representing the specific type of query to be logged.
-            text_query: a string representing the textual content of the query to be logged.
+            type_query:str a string representing the specific type of query to be logged.
+            text_query:str a string representing the textual content of the query to be logged.
         Returns:
             This function does not return any value. It modifies the database state directly.
         Raises:

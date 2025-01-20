@@ -4,6 +4,7 @@ from tkinter import messagebox
 from typing import List, Dict, Any
 
 #======================================== display_table ============================================================
+# Constants
 PIXEL_SCALE = 8
 DEFAULT_WINDOW_WIDTH_PADDING = 500
 DEFAULT_WINDOW_HEIGHT_PADDING = 150
@@ -315,6 +316,7 @@ def display_table(data: List[Dict[str, Any]], window_title: str) -> Dict[str, An
 
 
 #======================================== get_keyword ==================================================================
+# Constants
 WINDOW_WIDTH = 300
 WINDOW_HEIGHT = 250
 

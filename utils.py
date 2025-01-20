@@ -61,7 +61,7 @@ def search_by_keyword(db: DbMaster, root: tk.Tk) -> None:
                     # Log the query in the "popular_query" database
                     db.insert_query_log('film_by_keyword', f'{keyword}')
             else:
-                messagebox.showerror("Warning!", f"No Movie found matching the keyword: < {keyword} > !")
+                display_error(f"No Movie found matching the keyword: < {keyword} > !")
 
     except Exception as e:
         error_handler.handle_error_with_recommendation("An unexpected error occurred:", str(e))
@@ -88,7 +88,7 @@ def search_by_category_and_year(db: DbMaster, root: tk.Tk) -> None:
         def select_category():
             categories = query.get_info_from_db(db, "category_list")
             if not categories:
-                messagebox.showerror("Warning!", "No categories found!")
+                display_error("No categories found!")
                 return None
             selected = gui.display_table(categories, 'Choose a category:')
             return selected.get('category') if selected else None
@@ -97,7 +97,7 @@ def search_by_category_and_year(db: DbMaster, root: tk.Tk) -> None:
         def select_year(category):
             years = query.get_info_from_db(db, "year_list", (category,))
             if not years:
-                messagebox.showerror("Warning!", f"No years found for category: {category}")
+                display_error(f"No years found for category: {category}")
                 return None
             selected = gui.display_table(years, 'Choose a year:')
             return selected.get('year') if selected else None
@@ -117,7 +117,7 @@ def search_by_category_and_year(db: DbMaster, root: tk.Tk) -> None:
         # Search for movies
         results = query.get_info_from_db(db, "film_by_category_and_year", (category, year))
         if not results:
-            messagebox.showerror("Warning!", f"No movies found for category: {category} and year: {year}")
+            display_error(f"No movies found for category: {category} and year: {year}")
             return
 
         movie = gui.display_table(
@@ -229,7 +229,7 @@ def show_popular_queries(db: DbMaster) -> None:
     try:
         # Check if table "popular_query" exists
         if not db.check_db_table("popular_query"):
-            messagebox.showerror("Warning!", "There are no entries in the 'Popular Queries' database yet!")
+            display_error("There are no entries in the 'Popular Queries' database yet!")
             return
 
         # Get popular queries from the database
@@ -237,7 +237,7 @@ def show_popular_queries(db: DbMaster) -> None:
         if popular_query_list:
             gui.display_table(popular_query_list, "Popular queries to Database: | >> EXIT: <Double-Click> or <Enter>")
         else:
-            messagebox.showerror("Warning!", "There are no entries in the 'Popular Queries' database yet!")
+            display_error("There are no entries in the 'Popular Queries' database yet!")
     except Exception as e:
         error_handler.handle_error_with_recommendation("Unexpected Error", str(e))
 
