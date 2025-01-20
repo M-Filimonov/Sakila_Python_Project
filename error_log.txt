@@ -1,0 +1,9 @@
+2025-01-23 12:01:02,344 - ERROR - Runtime Error occurred: Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'count as 'Frequency'
+            FROM    sakila.popular_query
+            ORDER ' at line 3
+2025-01-23 12:01:06,900 - ERROR - Runtime Error occurred: Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'count as 'Frequency'
+            FROM    sakila.popular_query
+            ORDER ' at line 3
+2025-01-23 12:03:42,120 - ERROR - Runtime Error occurred: Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'count as 'Frequency'
+            FROM    sakila.popular_query
+            ORDER ' at line 3

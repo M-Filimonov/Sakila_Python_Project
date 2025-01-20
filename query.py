@@ -139,11 +139,11 @@ def get_info_from_db(db: DbMaster, menu: str, params: Optional[Tuple] = None) ->
         if query and isinstance(query, str):
             res = db.execute_query(query, params or ())
             return res
-        else:
-            raise ValueError("Query is undefined or invalid.")
     except RuntimeError as e:
-        error_handler.handle_non_blocking_error("Runtime Error", str(e))
+        error_handler.handle_error("Runtime Error", str(e))
+    except ValueError as e:
+        error_handler.handle_error("Value Error", str(e))
     except Exception as e:
-        error_handler.handle_non_blocking_error("Unexpected Error", str(e))
+        error_handler.handle_error("Unexpected Error", str(e))
 
     return []

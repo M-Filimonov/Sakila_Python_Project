@@ -3,7 +3,7 @@ from tkinter import messagebox
 
 # setting up logging
 logging.basicConfig(filename='error_log.txt', level=logging.ERROR,
-                    format='%(asctime)s - %(levellevel_name)s - %(message)s')
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 def handle_error(error_type: str, error_message: str):
     """

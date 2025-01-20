@@ -62,7 +62,7 @@ class DbMaster:
             self.cursor.execute(query, params)
             return self.cursor.fetchall()
         except mysql.connector.Error as e:
-            error_handler.handle_error_with_recommendation("Database Error", str(e))
+            #error_handler.handle_error_with_recommendation("Database Error", str(e))
             raise RuntimeError(f"Error executing query: {e}")
 
     def insert_query_log(self, type_query: str, text_query: str) -> None:

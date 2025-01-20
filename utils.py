@@ -237,9 +237,13 @@ def show_popular_queries(db: DbMaster) -> None:
         if popular_query_list:
             gui.display_table(popular_query_list, "Popular queries to Database: | >> EXIT: <Double-Click> or <Enter>")
         else:
-            display_error("There are no entries in the 'Popular Queries' database yet!")
-    except Exception as e:
-        error_handler.handle_error_with_recommendation("Unexpected Error", str(e))
+             raise ValueError("There are no entries in the 'Popular Queries' database yet!")
+    except RuntimeError as e:
+        error_handler.handle_error("Runtime Error", str(e))
+    except ValueError as e:
+        display_error("There are no entries in the 'Popular Queries' database yet!")
+
+
 
 def exit_program(db: DbMaster, root: tk.Tk) -> None:
     """
